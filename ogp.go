@@ -4,55 +4,30 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"net/http"
-	"reflect"
-
-	"strings"
-
-	"strconv"
-
-	"io/ioutil"
-
 	"github.com/PuerkitoBio/goquery"
 	"github.com/julianshen/go-readability"
+	"io/ioutil"
+	"net/http"
+	"reflect"
+	"strconv"
+	"strings"
 )
 
-// Image content
-type OgImage struct {
+type OgpImage struct {
 	Url    string `meta:"og:image,og:image:url"`
 	Width  int    `meta:"og:image:width"`
 	Height int    `meta:"og:image:height"`
 	Type   string `meta:"og:image:type"`
 }
 
-// Video content
-type OgVideo struct {
-	Url       string `meta:"og:video,og:video:url"`
-	SecureUrl string `meta:"og:video:secure_url"`
-	Width     int    `meta:"og:video:width"`
-	Height    int    `meta:"og:video:height"`
-	Type      string `meta:"og:video:type"`
-}
-
-// Audio
-type OgAudio struct {
-	Url       string `meta:"og:audio,og:audio:url"`
-	SecureUrl string `meta:"og:audio:secure_url"`
-	Type      string `meta:"og:audio:type"`
-}
-
-// Page info
-type PageInfo struct {
+type OgpPageInfo struct {
 	Title       string `meta:"og:title"`
 	Type        string `meta:"og:type"`
 	Url         string `meta:"og:url"`
-	Site        string `meta:"og:site"`
 	SiteName    string `meta:"og:site_name"`
 	Description string `meta:"og:description"`
 	Locale      string `meta:"og:locale"`
-	Images      []*OgImage
-	Videos      []*OgVideo
-	Audios      []*OgAudio
+	Images      []*OgpImage
 	Content     string
 }
 
@@ -72,8 +47,8 @@ func GetPageData(doc *goquery.Document, data interface{}) error {
 	return getPageData(doc, data)
 }
 
-func GetPageInfoFromResponse(response *http.Response) (*PageInfo, error) {
-	info := PageInfo{}
+func GetPageInfoFromResponse(response *http.Response) (*OgpPageInfo, error) {
+	info := OgpPageInfo{}
 	html, err := ioutil.ReadAll(response.Body)
 
 	if err != nil {
@@ -96,7 +71,7 @@ func GetPageInfoFromResponse(response *http.Response) (*PageInfo, error) {
 	return &info, nil
 }
 
-func GetPageInfoFromUrl(urlStr string) (*PageInfo, error) {
+func GetPageInfoFromUrl(urlStr string) (*OgpPageInfo, error) {
 	resp, err := http.Get(urlStr)
 
 	if err != nil {
@@ -154,7 +129,6 @@ func getPageData(doc *goquery.Document, data interface{}) error {
 						return e
 					}
 
-					//Ugly solution (I can't remove nodes. Why?)
 					if !reflect.DeepEqual(last.Elem().Interface(), data.Elem().Interface()) {
 						fv.Set(reflect.Append(fv, data.Elem()))
 						last.Elem().Set(data.Elem())
@@ -173,7 +147,6 @@ func getPageData(doc *goquery.Document, data interface{}) error {
 						return e
 					}
 
-					//Ugly solution (I can't remove nodes. Why?)
 					if !reflect.DeepEqual(last.Elem().Interface(), data.Elem().Interface()) {
 						fv.Set(reflect.Append(fv, data))
 						last.Elem().Set(data.Elem())
