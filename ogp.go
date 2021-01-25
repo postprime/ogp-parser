@@ -1,4 +1,4 @@
-package ogp
+package ogpparser
 
 // Image content
 type OgImage struct {
