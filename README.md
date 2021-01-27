@@ -24,3 +24,9 @@ type OgpImage struct {
 	Type   string `meta:"og:image:type"`
 }
 ```
+
+### How to use
+```go
+url := "https://www.bloomberg.co.jp/news/articles/2021-01-19/QN4ILZT0AFBS01"
+pageInfo, e := GetPageInfoFromUrl(url)
+```
