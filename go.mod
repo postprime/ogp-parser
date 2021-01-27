@@ -1,4 +1,4 @@
-module github.com/chunvv/ogp-parser
+module github.com/dktcompany1/ogp-parser
 
 go 1.15
 

@@ -13,6 +13,7 @@ import (
 	"strings"
 )
 
+// OgpImage presents for OGP image
 type OgpImage struct {
 	Url    string `meta:"og:image,og:image:url"`
 	Width  int    `meta:"og:image:width"`
@@ -20,6 +21,7 @@ type OgpImage struct {
 	Type   string `meta:"og:image:type"`
 }
 
+// OgpPageInfo presents for article
 type OgpPageInfo struct {
 	Title       string `meta:"og:title"`
 	Type        string `meta:"og:type"`
@@ -71,6 +73,7 @@ func GetPageInfoFromResponse(response *http.Response) (*OgpPageInfo, error) {
 	return &info, nil
 }
 
+// GetPageInfoFromUrl gets the page info by URl
 func GetPageInfoFromUrl(urlStr string) (*OgpPageInfo, error) {
 	resp, err := http.Get(urlStr)
 
