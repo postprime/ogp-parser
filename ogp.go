@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/julianshen/go-readability"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -18,19 +17,14 @@ type OgpImage struct {
 	Url    string `meta:"og:image,og:image:url"`
 	Width  int    `meta:"og:image:width"`
 	Height int    `meta:"og:image:height"`
-	Type   string `meta:"og:image:type"`
 }
 
 // OgpPageInfo presents for article
 type OgpPageInfo struct {
-	Title       string `meta:"og:title"`
-	Type        string `meta:"og:type"`
-	Url         string `meta:"og:url"`
-	SiteName    string `meta:"og:site_name"`
-	Description string `meta:"og:description"`
-	Locale      string `meta:"og:locale"`
-	Images      []*OgpImage
-	Content     string
+	Title    string `meta:"og:title"`
+	Url      string `meta:"og:url"`
+	SiteName string `meta:"og:site_name"`
+	Images   []*OgpImage
 }
 
 func GetPageDataFromHtml(html []byte, data interface{}) error {
@@ -62,14 +56,6 @@ func GetPageInfoFromResponse(response *http.Response) (*OgpPageInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	r, err := readability.NewDocument(string(html))
-	if err != nil {
-		return nil, err
-	}
-
-	info.Content = r.Text()
-
 	return &info, nil
 }
 
